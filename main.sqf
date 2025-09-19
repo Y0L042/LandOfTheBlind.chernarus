@@ -135,8 +135,8 @@ if (hasInterface) then {
                     private _slot = 0; // Default slot
                     [_slot] call skhpersist_fnc_ClearSave;
                     LOTB_SavedVars = createHashMap; // Reset local saved vars
-                    [LOTB_SavedVars, true] call LOTB_fnc_EnsureSavedVars; // Re-initialize keys
-                    [LOTB_SavedVars, LOTB_SavedVars_Key] call LOTB_fnc_PutHashMap;
+                    // [LOTB_SavedVars, true] call LOTB_fnc_EnsureSavedVars; // Re-initialize keys
+                    [LOTB_SavedVars, LOTB_SavedVars_Key] call LOTB_fnc_SaveHashMap;
                     
                     // Also clear mission progress
                     profileNamespace setVariable ["LOTB_MissionProgress", nil];

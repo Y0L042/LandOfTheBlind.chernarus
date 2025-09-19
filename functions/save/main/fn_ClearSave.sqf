@@ -23,6 +23,6 @@ else
 	profileNamespace setVariable [_x, nil];
 } forEach _variables;
 
-saveProfileNamespace;
+// saveProfileNamespace;
 
-hint format ["Save has been cleaned up!"];
+// hint format ["Save has been cleaned up!"];
