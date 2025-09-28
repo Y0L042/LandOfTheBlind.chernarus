@@ -88,8 +88,7 @@ g_StarterPistolAmmoTaken = ["g_StarterPistolAmmoTaken", false] call UTIL_fnc_get
 g_SkalistyBoatKeyTaken = ["g_SkalistyBoatKeyTaken", false] call UTIL_fnc_getVar;
 g_SkalistyBoatTaken = ["g_SkalistyBoatTaken", false] call UTIL_fnc_getVar;
 
-g_SpawnLocationUnlocked_SkalistyBeach = ["g_SpawnLocationUnlocked_SkalistyBeach", true] call UTIL_fnc_getVar; // First spawn point
-g_SpawnLocationUnlocked_SkalistyTown = ["g_SpawnLocationUnlocked_SkalistyTown", false] call UTIL_fnc_getVar;
+g_SpawnLocationUnlocked_SkalistyIsland = ["g_SpawnLocationUnlocked_SkalistyIsland", false] call UTIL_fnc_getVar;
 
 g_SpawnCampLocation = ["g_SpawnCampLocation", [0,0,0]] call UTIL_fnc_getVar;
 
