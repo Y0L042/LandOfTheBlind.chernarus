@@ -88,21 +88,12 @@ g_StarterPistolAmmoTaken = ["g_StarterPistolAmmoTaken", false] call UTIL_fnc_get
 g_SkalistyBoatKeyTaken = ["g_SkalistyBoatKeyTaken", false] call UTIL_fnc_getVar;
 g_SkalistyBoatTaken = ["g_SkalistyBoatTaken", false] call UTIL_fnc_getVar;
 
+g_SpawnLocationUnlocked_SkalistyBeach = ["g_SpawnLocationUnlocked_SkalistyBeach", true] call UTIL_fnc_getVar; // First spawn point
+g_SpawnLocationUnlocked_SkalistyTown = ["g_SpawnLocationUnlocked_SkalistyTown", false] call UTIL_fnc_getVar;
 
+g_SpawnCampLocation = ["g_SpawnCampLocation", [0,0,0]] call UTIL_fnc_getVar;
 
-
-// ["g_Story01Status: " + str g_Story01Status, "VARIABLE"] call LOTB_fnc_debugPrint;
-// ["g_Story01AStatus: " + str g_Story01AStatus, "VARIABLE"] call LOTB_fnc_debugPrint;
-// ["g_Story01BStatus: " + str g_Story01BStatus, "VARIABLE"] call LOTB_fnc_debugPrint;
-// ["g_Story02Status: " + str g_Story02Status, "VARIABLE"] call LOTB_fnc_debugPrint;
-// ["g_Story02AStatus: " + str g_Story02AStatus, "VARIABLE"] call LOTB_fnc_debugPrint;
-// ["g_Story01APictureTaken: " + str g_Story01APictureTaken, "VARIABLE"] call LOTB_fnc_debugPrint;
-// ["g_Story01BNotebookTaken: " + str g_Story01BNotebookTaken, "VARIABLE"] call LOTB_fnc_debugPrint;
-// ["g_StarterPistolTaken: " + str g_StarterPistolTaken, "VARIABLE"] call LOTB_fnc_debugPrint;
-// ["g_StarterPistolAmmoTaken: " + str g_StarterPistolAmmoTaken, "VARIABLE"] call LOTB_fnc_debugPrint;
-// ["g_SkalistyBoatKeyTaken: " + str g_SkalistyBoatKeyTaken, "VARIABLE"] call LOTB_fnc_debugPrint;
-// ["g_SkalistyBoatTaken: " + str g_SkalistyBoatTaken, "VARIABLE"] call LOTB_fnc_debugPrint;
-
+s_SpawnCampPlaceTime = -9999; // Session-only variable to track last camp placement time
 
 
 
@@ -176,6 +167,30 @@ UTIL_initializePlayerLoadout = {
 
 // Note: Respawn handling is now done via onPlayerRespawn.sqf
 
+// Restore saved camp function
+UTIL_restoreSavedCamp = {
+    private _savedCampPos = ["g_SpawnCampLocation", []] call UTIL_fnc_getVar;
+    private _savedCampTime = ["campLastPlacedTime", -1] call UTIL_fnc_getVar;
+    
+    ["Checking for saved camp to restore", "CAMP"] call LOTB_fnc_debugPrint;
+    ["DEBUG: Saved camp position = " + str _savedCampPos, "DEBUG"] call LOTB_fnc_debugPrint;
+    ["DEBUG: Saved camp time = " + str _savedCampTime, "DEBUG"] call LOTB_fnc_debugPrint;
+    
+    if (count _savedCampPos > 0 && _savedCampPos isNotEqualTo [0,0,0] && _savedCampTime != -1) then {
+        ["Restoring saved camp at " + str _savedCampPos, "CAMP"] call LOTB_fnc_debugPrint;
+        
+        // Restore the camp at saved position, skip cooldown check
+        [_savedCampPos, true] call LOTB_fnc_placeCamp;
+        
+        // Restore the saved camp time
+        player setVariable ["lastCampPlacedTime", _savedCampTime];
+        
+        ["Saved camp restored successfully", "CAMP"] call LOTB_fnc_debugPrint;
+    } else {
+        ["No saved camp to restore", "CAMP"] call LOTB_fnc_debugPrint;
+    };
+};
+
 // Inventory monitoring system for weapon pickups
 UTIL_startInventoryMonitoring = {
     ["Starting inventory monitoring system", "INVENTORY"] call LOTB_fnc_debugPrint;
@@ -235,25 +250,6 @@ UTIL_onItemPickup = {
     params ["_itemClass", "_itemType"];
 
     [] call UTIL_savePlayerLoadout;
-    
-    // Check for specific story items
-    // switch (_itemClass) do {
-    //     case "gm_p1_blk": {
-    //         ["Starter pistol picked up!", "STORY"] call LOTB_fnc_debugPrint;
-    //         g_StarterPistolTaken = ["g_StarterPistolTaken", true] call UTIL_fnc_setVar;
-    //         // Auto-save loadout when important items are picked up
-    //         [] call UTIL_fnc_savePlayerLoadout;
-    //     };
-    //     case "gm_30Rnd_762x39mm_B_M43_ak47_blk": {
-    //         ["Starter pistol ammo picked up!", "STORY"] call LOTB_fnc_debugPrint;
-    //         g_StarterPistolAmmoTaken = ["g_StarterPistolAmmoTaken", true] call UTIL_fnc_setVar;
-    //         [] call UTIL_fnc_savePlayerLoadout;
-    //     };
-    //     // Add more cases for other story items
-    //     default {
-    //         ["Generic item picked up: " + _itemClass, "PICKUP"] call LOTB_fnc_debugPrint;
-    //     };
-    // };
 };
 
 // Create function aliases
@@ -263,5 +259,6 @@ UTIL_fnc_setDefaultLoadout = UTIL_setDefaultLoadout;
 UTIL_fnc_initializePlayerLoadout = UTIL_initializePlayerLoadout;
 UTIL_fnc_startInventoryMonitoring = UTIL_startInventoryMonitoring;
 UTIL_fnc_onItemPickup = UTIL_onItemPickup;
+UTIL_fnc_restoreSavedCamp = UTIL_restoreSavedCamp;
 
 systemChat "PreInit complete - all global variables loaded!";
