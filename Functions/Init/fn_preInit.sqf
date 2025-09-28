@@ -239,7 +239,7 @@ UTIL_startInventoryMonitoring = {
             player setVariable ["lastKnownItems", _currentItems];
             player setVariable ["lastKnownMagazines", _currentMagazines];
             
-            sleep 0.5; // Check every 0.5 seconds
+            sleep 1;
         };
     };
 };
