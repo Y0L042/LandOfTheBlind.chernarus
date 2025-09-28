@@ -141,8 +141,8 @@ _tent addAction [
         
         // Remove respawn point
         private _respawnPos = _caller getVariable ["campRespawnPos", ""];
-        if (_respawnPos != "") then {
-            [_respawnPos] call BIS_fnc_removeRespawnPosition;
+        if (isNil "_campRespawnHandle") then {
+            [independent, _campRespawnHandle] call BIS_fnc_removeRespawnPosition;
         };
         
         // Clear variables
