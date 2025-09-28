@@ -15,5 +15,13 @@ class CfgFunctions
                 preInit = 1;
             };
         };
+        class Missions
+        {
+            class story01_main {};
+            class story01a_investigateTown {};
+            class story01b_pickupNotebook {};
+            class story02_main {};
+            class story02a_searchWarehouses {};
+        };
     };
 };
