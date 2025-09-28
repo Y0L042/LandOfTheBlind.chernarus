@@ -1,79 +1,26 @@
-// Var keys
-LOTB_fnc_SetSavedVarsKeys = {
-    systemChat "SavedVars keys created";
+systemChat "Running SavedVars.sqf";
 
-    // Mission states
-    LOTB_NOTSTARTED = "_NOTSTARTED_"; // Mission not created yet
+NOT_STARTED = 0;
+ASSIGNED = 1;
+COMPLETED = 2;
+FAILED = 3;
 
-    // These missions must be created, and their status set.
-    LOTB_ASSIGNED = "ASSIGNED"; // Mission created and assigned
-    LOTB_UNASSIGNED = "UNASSIGNED"; // Mission created, but unassigned
-    LOTB_SUCCESS = "COMPLETED"; // Mission completed, success
-    LOTB_FAILED = "FAILED"; // Mission completed, failed
+// Story Status
+g_Story01Status = ["g_Story01Status", ASSIGNED] call UTIL_fnc_getVar;
+g_Story01AStatus = ["g_Story01AStatus", ASSIGNED] call UTIL_fnc_getVar;
+g_Story01BStatus = ["g_Story01BStatus", NOT_STARTED] call UTIL_fnc_getVar;
 
-    // Story_01
-    LOTB_Story_01_TasksCompleted_Key = "LOTB_Story_01_TasksCompleted";
-    LOTB_Story_01_Status_Key = "LOTB_Story_01_Completed";
-    LOTB_Story_01_a_PhotoFound_Key = "LOTB_Story_01_a_PhotoFound";
-    LOTB_Story_01_b_NotebookFound_Key = "LOTB_Story_01_b_NotebookFound";
-    LOTB_SkalistyBoatFound_Key = "LOTB_SkalistyBoatFound";
-    LOTB_SkalistyGunFound_Key = "LOTB_SkalistyGunFound";
+g_Story02Status = ["g_Story02Status", NOT_STARTED] call UTIL_fnc_getVar;
+g_Story02AStatus = ["g_Story02AStatus", NOT_STARTED] call UTIL_fnc_getVar;
 
-    // Story_02
-    LOTB_Story02_TasksCompleted_Key = "LOTB_Story02_TasksCompleted";
-    LOTB_Story02_WarehousesInvestigated_Key = "LOTB_Story02_WarehousesInvestigated";
-
-    [
-        LOTB_Story_01_TasksCompleted_Key,
-        LOTB_Story_01_Status_Key,
-        LOTB_Story_01_a_PhotoFound_Key,
-        LOTB_Story_01_b_NotebookFound_Key,
-        LOTB_SkalistyBoatFound_Key,
-        LOTB_SkalistyGunFound_Key,
+// Story Item Status
+g_Story01APictureTaken = ["g_Story01APictureTaken", false] call UTIL_fnc_getVar;
+g_Story01BNotebookTaken = ["g_Story01BNotebookTaken", false] call UTIL_fnc_getVar;
 
 
-        LOTB_Story02_TasksCompleted_Key,
-        LOTB_Story02_WarehousesInvestigated_Key
-    ]
-};
+// Misc Status
+g_StarterPistolTaken = ["g_StarterPistolTaken", false] call UTIL_fnc_getVar;
+g_StarterPistolAmmoTaken = ["g_StarterPistolAmmoTaken", false] call UTIL_fnc_getVar;
+g_SkalistyBoatKeyTaken = ["g_SkalistyBoatKeyTaken", false] call UTIL_fnc_getVar;
+g_SkalistyBoatTaken = ["g_SkalistyBoatTaken", false] call UTIL_fnc_getVar;
 
-LOTB_fnc_EnsureSavedVars = {
-    params ["_hashMap", ["_reset", false]];
-
-    systemChat "EnsureSavedVars()";
-    [format ["EnsureSavedVars() called on %1", if (hasInterface) then {"client"} else {"server"}]] call skhpersist_fnc_LogToRPT;
-
-    if (_reset) then {
-        systemChat "Resetting SavedVars!";
-        [format ["Resetting SavedVars! called on %1", if (hasInterface) then {"client"} else {"server"}]] call skhpersist_fnc_LogToRPT;
-        _hashMap = createHashMap;
-    };
-
-    // Story_01
-    if (isNil { _hashMap get LOTB_Story_01_TasksCompleted_Key }) then {
-        _hashMap set [LOTB_Story_01_TasksCompleted_Key, []];
-    };
-    if (isNil { _hashMap get LOTB_Story_01_Status_Key }) then {
-        _hashMap set [LOTB_Story_01_Status_Key, LOTB_NOTSTARTED];
-    };
-    if (isNil { _hashMap get LOTB_Story_01_a_PhotoFound_Key }) then {
-        _hashMap set [LOTB_Story_01_a_PhotoFound_Key, LOTB_NOTSTARTED];
-    };
-    if (isNil { _hashMap get LOTB_Story_01_b_NotebookFound_Key }) then {
-        _hashMap set [LOTB_Story_01_b_NotebookFound_Key, LOTB_NOTSTARTED];
-    };
-    if (isNil { _hashMap get LOTB_SkalistyBoatFound_Key }) then {
-        _hashMap set [LOTB_SkalistyBoatFound_Key, LOTB_NOTSTARTED];
-    };
-    if (isNil { _hashMap get LOTB_SkalistyGunFound_Key }) then {
-        _hashMap set [LOTB_SkalistyGunFound_Key, LOTB_NOTSTARTED];
-    };
-
-    // Story_02
-    if (isNil { _hashMap get LOTB_Story02_TasksCompleted_Key }) then {
-        _hashMap set [LOTB_Story02_TasksCompleted_Key, []];
-    };
-    if (isNil { _hashMap get LOTB_Story02_WarehousesInvestigated_Key }) then {
-        _hashMap set [LOTB_Story02_WarehousesInvestigated_Key, LOTB_NOTSTARTED];
-    };
-};
